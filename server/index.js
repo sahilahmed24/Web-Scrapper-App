@@ -3,14 +3,29 @@ const app = express(); // Initializing Express
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
+
+// app.use(
+//   cors({
+//     origin: "*", //for frontEnd connection
+//     credentials: true,
+//   })
+// );
 
 app.get("/data", function (req, res) {
   puppeteer.launch().then(async function (browser) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
     try {
       const browswer = await puppeteer.launch();
-
       const page = await browswer.newPage();
       await page.goto("https://rategain.com/blog/");
+
+      // while (await page.$(".pagination .next a")) {}
 
       const BlogDetails = await page.$$eval(".blog-items article", (element) =>
         element.map((e) => ({
