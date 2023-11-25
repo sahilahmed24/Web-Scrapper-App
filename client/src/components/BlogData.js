@@ -41,6 +41,7 @@ const BlogData = () => {
           return dateB.getTime() - dateA.getTime();
         });
         setData(sortedData);
+        console.log(sortedData);
       });
   }, []);
 
@@ -50,8 +51,6 @@ const BlogData = () => {
 
   return (
     <div>
-      <h1>Blog Details</h1>
-
       <div>
         <DownloadButton
           text="Download CSV"

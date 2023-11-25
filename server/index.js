@@ -25,8 +25,6 @@ app.get("/data", function (req, res) {
       const page = await browswer.newPage();
       await page.goto("https://rategain.com/blog/");
 
-      // while (await page.$(".pagination .next a")) {}
-
       const BlogDetails = await page.$$eval(".blog-items article", (element) =>
         element.map((e) => ({
           BlogTitle: e.querySelector(".content h6 a").innerText,
