@@ -6,33 +6,46 @@ const path = require("path");
 
 app.get("/data", function (req, res) {
   puppeteer.launch().then(async function (browser) {
-    const browswer = await puppeteer.launch();
+    try {
+      const browswer = await puppeteer.launch();
 
-    const page = await browswer.newPage();
-    await page.goto("https://rategain.com/blog/");
+      const page = await browswer.newPage();
+      await page.goto("https://rategain.com/blog/");
 
-    const BlogDetails = await page.$$eval(".blog-items article", (element) =>
-      element.map((e) => ({
-        BlogTitle: e.querySelector(".content h6 a").innerText,
-        BlogDate: e.querySelector(".content .blog-detail .bd-item span")
-          .innerText,
-        BlogImgUrl: e.querySelector(".img a[data-bg]").getAttribute("data-bg"),
-        BlogLikeCount: e.querySelector(".content .zilla-likes span").innerText,
-      }))
-    );
+      const BlogDetails = await page.$$eval(".blog-items article", (element) =>
+        element.map((e) => ({
+          BlogTitle: e.querySelector(".content h6 a").innerText,
+          BlogDate: e.querySelector(".content .blog-detail .bd-item span")
+            .innerText,
+          BlogImgUrl: e
+            .querySelector(".img a[data-bg]")
+            .getAttribute("data-bg"),
+          BlogLikeCount: e.querySelector(".content .zilla-likes span")
+            .innerText,
+        }))
+      );
 
-    console.log(BlogDetails);
+      console.log(BlogDetails);
 
-    await browswer.close();
+      await browswer.close();
 
-    const csvData = BlogDetails.map((BlogDetails) => {
-      return `${BlogDetails.BlogTitle}, ${BlogDetails.BlogDate}, ${BlogDetails.BlogImgUrl}, ${BlogDetails.BlogLikeCount}`;
-    }).join("\n");
+      const csvData = BlogDetails.map((BlogDetails) => {
+        return `${BlogDetails.BlogTitle}, ${BlogDetails.BlogDate}, ${BlogDetails.BlogImgUrl}, ${BlogDetails.BlogLikeCount}`;
+      }).join("\n");
 
-    const csvFilePath = path.join(__dirname, "BlogDetails.csv");
-    fs.writeFileSync(csvFilePath, csvData);
+      const csvFilePath = path.join(__dirname, "BlogDetails.csv");
+      fs.writeFileSync(csvFilePath, csvData);
 
-    res.send({ BlogDetails, csvFilePath });
+      return res.status(200).json({
+        filePath: csvFilePath,
+        data: BlogDetails,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: console.log(error),
+      });
+    }
   });
 });
 
