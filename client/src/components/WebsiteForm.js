@@ -10,6 +10,7 @@ const WebsiteForm = () => {
   };
 
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [websitePage, setWebsitePage] = useState("");
   const [fields, setFields] = useState([{ name: null, description: null }]);
 
   const handleInputChange = (event) => {
@@ -39,7 +40,7 @@ const WebsiteForm = () => {
 
   return (
     <div className="form-container">
-      <label className="input-label">Website URL:</label>
+      <label className="input-label">Target Website URL:</label>
       <input
         type="text"
         className="input-field"
@@ -47,10 +48,18 @@ const WebsiteForm = () => {
         value={websiteUrl}
         onChange={handleInputChange}
       />
+      <label className="input-label">No of Pages:</label>
+      <input
+        type="text"
+        className="input-field"
+        name="websitePage"
+        value={websitePage}
+        onChange={handleInputChange}
+      />
 
       {fields.map((field, index) => (
         <div key={index}>
-          <label className="input-label">Field Name:</label>
+          <label className="input-label">Target Field Name:</label>
           <input
             type="text"
             className="input-field"
